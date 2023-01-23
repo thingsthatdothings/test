@@ -1,19 +1,19 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
-on:
-  push:
+on: [push]
+
 jobs:
-  use-actions:
+  hello_world_job:
     runs-on: ubuntu-latest
+    name: A job to say hello
     steps:
-      inputs:
-        milliseconds:  # id of input
-          description: 'number of milliseconds to wait'
-          required: true
-          default: '1000'
-      outputs:
-        time: # output will be available to future steps
-          description: 'The current time after waiting'
-      runs:
-        using: 'node16'
-        main: 'dist/index.js'
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Hello world action step
+        uses: ./ # Uses an action in the root directory
+        id: hello
+        with:
+          who-to-greet: 'Mona the Octocat'
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
